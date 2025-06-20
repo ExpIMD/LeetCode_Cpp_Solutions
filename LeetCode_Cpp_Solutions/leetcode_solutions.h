@@ -2,6 +2,7 @@
 #define __LEETCODE_SOLUTIONS_
 
 #include <optional>
+#include <unordered_map>
 #include <string>
 #include <tuple>
 #include <vector>
@@ -9,7 +10,23 @@
 // Given a vector of integers <numbers> and an integer <target>
 // Returns a tuple of two indices of elements in a vector whose sum equals the <target>
 // Otherwise, returns a tuple of two zeros
-std::tuple<size_t, size_t> two_sum(const std::vector<int>& numbers, int target);
+template<typename T> requires std::integral<T>
+std::tuple<size_t, size_t> two_sum(const std::vector<T>& numbers, const T& target) {
+	// Let target be the sum of the main and rest parts.
+
+	std::unordered_map<int, size_t> mappping;
+	// Define a mapping from the rest part to the index of the main part in the vector.
+
+	for (size_t i{ 0 }; i < numbers.size(); ++i) { // We will iterate through all elements in the vector and compute the current rest part
+		int rest_part = target - numbers[i];
+
+		if (mappping.count(rest_part) > 0) return std::make_tuple(mappping[rest_part], i); // If an entry for the current rest part already exists in mapping, then the result is found!
+
+		mappping[numbers[i]] = i; // Otherwise, we add a new entry for the current main part to mapping.
+	}
+
+	return std::make_tuple(0, 0); // No solution
+}
 
 // Given a sorted vector <vec> and a value <target>
 // Returns the index of <target> in <vec> if it exists
@@ -81,5 +98,47 @@ T reversed(T number) {
 // Given a string <line>
 // Returns the length of the last word in <line>
 size_t last_word_length(const std::string& line);
+
+// Given a collection <col>
+// Returns the element that occurs more than half of the time in the collection (the majority element)
+// If there is no majority element, a random element is returned
+template<typename C> requires std::ranges::range<C>
+typename C::value_type Boyer_Moore_vote_algorithm(const C& col) {
+	/*
+		It works by maintaining a candidate and a counter:
+		it increments the counter when the current element matches the candidate, decrements otherwise,
+		and resets the candidate when the counter reaches zero.
+		After one pass, the candidate is the majority element if one exists.
+	*/
+	typename C::value_type candidate;
+	size_t frequence{ 0 };
+
+	for (const auto& x : col) {
+		if (frequence == 0) candidate = x;
+		if (x == candidate) ++frequence;
+		else --frequence;
+	}
+	return candidate;
+	/*
+		It does not guarantee that the candidate actually occurs more than half of the time.
+		If there is no majority element, a random element is returned
+	*/
+}
+
+// Given a collection <col>
+// Returns the element that occurs more than half of the time in the collection (the majority element)
+// If there is no majority element, returns std::nullopt
+template<typename C> requires std::ranges::range<C>
+std::optional<typename C::value_type> majority_element(const C& col) {
+	std::unordered_map<typename C::value_type, size_t> mapping; // Mapping from collection elements to their frequency of occurrence
+	size_t times = col.size() / 2; // Frequency of the most frequently occurring element
+
+	for (const auto& x : col) {
+		++mapping[x];
+		if (mapping[x] > times) return x; // Found the majority element in collection
+	}
+	return std::nullopt; // If there is no majority element, returns std::nullopt
+}
+
 
 #endif 
