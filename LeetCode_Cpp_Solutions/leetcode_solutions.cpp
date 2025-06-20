@@ -20,3 +20,4 @@ std::tuple<size_t, size_t> two_sum(const std::vector<int>& numbers, int target) 
 
 	return std::make_tuple(0, 0); // No solution
 }
+
