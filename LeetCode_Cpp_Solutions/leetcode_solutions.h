@@ -1,0 +1,6 @@
+#ifndef __LEETCODE_SOLUTIONS_
+#define __LEETCODE_SOLUTIONS_
+
+
+
+#endif __LEETCODE_SOLUTIONS_
