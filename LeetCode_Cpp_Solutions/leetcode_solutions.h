@@ -140,5 +140,11 @@ std::optional<typename C::value_type> majority_element(const C& col) {
 	return std::nullopt; // If there is no majority element, returns std::nullopt
 }
 
+template<typename T> requires std::integral<T>
+bool is_palindrome(const T& number) {
+	if (number < 0) return false;
+	return number == reversed(number);
+}
+
 
 #endif 
