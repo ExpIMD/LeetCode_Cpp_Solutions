@@ -183,5 +183,21 @@ std::vector<T> get_Pascal_triangle_row(size_t row_index) {
 	return result;
 }
 
+// Given a matrix <triangle>
+// Returns the minimum path sum from top to bottom
+template<typename T = int>
+std::vector<T> minimum_triangle_total(const std::vector<std::vector<T>>& triangle) {
+	// Create a vector to store the minimum sums for each position at the current level
+	// Initialize it with the values from the last row of the triangle
+	size_t rows_count{ triangle.size() };
+	std::vector<T> min_sums = triangle.back();
+	
+	for (size_t i{ rows_count - 1 }; i-- > 0; )
+		for (size_t j{ 0 }; j <= i; ++j)
+			min_sums[j] = std::min(min_sums[j], min_sums[j + 1]) + triangle[i][j]; // Update min_sums[j] with the minimum sum of paths going down
+	
+	return min_sums[0];
+}
+
 
 #endif 
