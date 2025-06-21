@@ -11,3 +11,29 @@ size_t last_word_length(const std::string& line) {
 	}
 	return length;
 }
+
+// Given a string <line>
+// Checks if the <line> is a palindrome
+bool is_palindrome(const std::string& line) {
+	if (line.empty()) return true; // We will consider the empty string as a palindrome
+
+	size_t left{ 0 }, right{ line.size() - 1 }; // Initialize two pointers: one at the start and one at the end of the string
+
+	while (left < right) {
+		if (!std::isalnum(line[left])) { // If the character at 'left' is not alphanumeric, skip it
+			++left;
+			continue;
+		}
+		if (!std::isalnum(line[right])) { // If the character at 'right' is not alphanumeric, skip it
+			--right;
+			continue;
+		}
+		if (line[left] != line[right]) return false; // Characters do not match, not a palindrome
+		else { // Characters match; move inward towards the center
+			++left;
+			--right;
+		}
+	}
+
+	return true;
+}
