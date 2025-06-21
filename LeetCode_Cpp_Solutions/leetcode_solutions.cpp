@@ -37,3 +37,4 @@ bool is_palindrome(const std::string& line) {
 
 	return true;
 }
+

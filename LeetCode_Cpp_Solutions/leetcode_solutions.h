@@ -152,5 +152,22 @@ bool is_palindrome(const T& number) {
 // Checks if the <line> is a palindrome
 bool is_palindrome(const std::string& line);
 
+// Given an integer <rows_count>
+// Returns Pascal's triangle with <rows_count> rows
+template<typename T = int>
+std::vector<std::vector<T>> Pascal_triangle(size_t rows_count) {
+	// Initialize the Pascal triangle
+	std::vector<std::vector<T>> result(rows_count);
+
+	for (size_t i{ 0 }; i < rows_count; ++i) {
+		result[i] = std::vector<T>(i + 1, 1); // All elements are set to 1 by default to avoid having to specify additional conditions
+		for (size_t j{ 1 }; j < i; ++j)
+			result[i][j] = result[i - 1][j - 1] + result[i - 1][j]; // Element storage rule
+	}
+	return result;
+}
+
+
+
 
 #endif 
