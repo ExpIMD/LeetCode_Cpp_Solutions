@@ -167,7 +167,21 @@ std::vector<std::vector<T>> Pascal_triangle(size_t rows_count) {
 	return result;
 }
 
+// Given an integer <row_index>
+// Returns Pascal's triangle row with <row_index> index
+template<typename T = int>
+std::vector<T> get_Pascal_triangle_row(size_t row_index) {
+	// Initialize the Pascal triangle row
+	std::vector<std::vector<T>> row(row_index+1, 1);
 
+	// Compute the internal elements of the row (excluding the edges)
+	// Update elements from right to left to avoid overwriting values that are still needed for calculations
+	for (size_t i{ 1 }; i < row_index; ++i)
+		for (size_t j{ i }; j > 0; --j)
+			row[j] += row[j - 1];
+
+	return result;
+}
 
 
 #endif 
