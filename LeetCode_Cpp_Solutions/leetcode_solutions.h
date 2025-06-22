@@ -1,11 +1,14 @@
 #ifndef __LEETCODE_SOLUTIONS_
 #define __LEETCODE_SOLUTIONS_
 
+#include <algorithm>
 #include <optional>
-#include <unordered_map>
 #include <string>
 #include <tuple>
+#include <unordered_map>
 #include <vector>
+
+using namespace std::literals;
 
 // Given a vector of integers <numbers> and an integer <target>
 // Returns a tuple of two indices of elements in a vector whose sum equals the <target>
@@ -172,7 +175,7 @@ std::vector<std::vector<T>> Pascal_triangle(size_t rows_count) {
 template<typename T = int>
 std::vector<T> get_Pascal_triangle_row(size_t row_index) {
 	// Initialize the Pascal triangle row
-	std::vector<std::vector<T>> row(row_index+1, 1);
+	std::vector<std::vector<T>> row(row_index + 1, 1);
 
 	// Compute the internal elements of the row (excluding the edges)
 	// Update elements from right to left to avoid overwriting values that are still needed for calculations
@@ -180,7 +183,7 @@ std::vector<T> get_Pascal_triangle_row(size_t row_index) {
 		for (size_t j{ i }; j > 0; --j)
 			row[j] += row[j - 1];
 
-	return result;
+	return row;
 }
 
 // Given a matrix <triangle>
@@ -191,13 +194,58 @@ std::vector<T> minimum_triangle_total(const std::vector<std::vector<T>>& triangl
 	// Initialize it with the values from the last row of the triangle
 	size_t rows_count{ triangle.size() };
 	std::vector<T> min_sums = triangle.back();
-	
+
 	for (size_t i{ rows_count - 1 }; i-- > 0; )
 		for (size_t j{ 0 }; j <= i; ++j)
 			min_sums[j] = std::min(min_sums[j], min_sums[j + 1]) + triangle[i][j]; // Update min_sums[j] with the minimum sum of paths going down
-	
+
 	return min_sums[0];
 }
 
+// Given a container of strings \<lines\>.
+// Returns the longest common prefix of all strings in the list.
+// If there is no common prefix or the list is empty, returns an empty string "".
+template <typename C> requires std::ranges::range<C>&& std::same_as<typename C::value_type, std::string>
+std::string longest_common_prefix_char_comprasion(const C& lines) {
+	if (lines.size() == 0) return ""s;
+
+	std::string prefix = *lines.begin(); // Let's assume that the first line is the desired prefix
+	for (auto it = ++lines.begin(); it != lines.end(); ++it) { // Iterate through each subsequent string in the list
+		auto mismatch_pointer = mismatch(prefix.begin(), prefix.end(), it->begin(), it->end()); // Find the first position where prefix and current line differ
+		size_t k = std::distance(prefix.begin(), mismatch_pointer.first); // Calculate the length of the common prefix by measuring distance from start to mismatch position
+
+		prefix.resize(k); // Resize the prefix to the length of the common prefix found so far. Avoids unnecessary memory usage
+
+		if (prefix.empty()) break; // If the common prefix becomes empty, no need to continue checking
+	}
+
+	return prefix;
+}
+
+// Given a container of strings \<lines\>.
+// Returns the longest common prefix of all strings in the list.
+// If there is no common prefix or the list is empty, returns an empty string "".
+// Changes the order in which elements are stored in a container and its contents
+template <typename C> requires std::ranges::range<C>&& std::same_as<typename C::value_type, std::string>
+std::string longest_common_prefix_sort(C& lines) {
+	if (lines.size() == 0) return ""s;
+
+	// Sort the list lexicographically
+	// After sorting, the strings with similar prefixes will be grouped together
+	std::sort(lines.begin(), lines.end());
+
+	std::string& first = *lines.begin();
+	std::string& last = *--lines.end();
+	size_t k = std::min(first.size(), last.size());
+
+	for (size_t i{ 0 }; i < k; ++i) { // Compare characters of the first and last strings to find the common prefix
+		if (first[i] != last[i]) {
+			first.resize(i); // Return the prefix up to the point where mismatch occurs
+			break;
+		}
+	}
+
+	return first; // If no mismatch found, entire shortest string is a common prefix
+}
 
 #endif 

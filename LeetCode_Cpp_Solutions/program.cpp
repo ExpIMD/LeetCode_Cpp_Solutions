@@ -4,8 +4,11 @@
 #include "leetcode_solutions.h"
 
 int main() {
-	std::string line = "ab a";
-	std::cout << is_palindrome(line);
+	std::vector<std::string> vec{ "aac" };
+	auto res = longest_common_prefix_sort(vec);
+	res += "D";
+	std::cout << res;
+	std::cout << vec[0];
 
 
 	return 1;
