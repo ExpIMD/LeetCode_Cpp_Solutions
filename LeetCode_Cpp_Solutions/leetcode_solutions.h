@@ -2,6 +2,7 @@
 #define __LEETCODE_SOLUTIONS_
 
 #include <algorithm>
+#include <iterator>
 #include <optional>
 #include <string>
 #include <tuple>
@@ -234,8 +235,9 @@ std::string longest_common_prefix_sort(C& lines) {
 	// After sorting, the strings with similar prefixes will be grouped together
 	std::sort(lines.begin(), lines.end());
 
+	// std::string& are needed to avoid unnecessary copying
 	std::string& first = *lines.begin();
-	std::string& last = *--lines.end();
+	std::string& last = *std::prev(lines.end());
 	size_t k = std::min(first.size(), last.size());
 
 	for (size_t i{ 0 }; i < k; ++i) { // Compare characters of the first and last strings to find the common prefix
