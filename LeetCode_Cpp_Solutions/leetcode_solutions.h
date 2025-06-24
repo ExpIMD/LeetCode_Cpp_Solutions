@@ -249,5 +249,25 @@ std::string longest_common_prefix_sort(C& lines) {
 
 	return first; // If no mismatch found, entire shortest string is a common prefix
 }
+// Given a collection of numbers <prices> where prices[i] is the price of a given stock on the ith day
+// The goal is to find the maximum profit that can be achieved by buying a stock on one day and selling it on a later day.
+// Returns the maximum profit you can achieve from this transaction
+// If no profit is possible(i.e., prices only decrease or stay the same), the result should be 0.
+template<typename C> requires std::ranges::range<C> && (std::integral<typename C::value_type> || std::floating_point<typename C::value_type>)
+typename C::value_type max_profit(const C& con) {
+	typename C::value_type min_price{ *con.begin() };
+	typename C::value_type result{ 0 }; // Initialize the result as 0, since the maximum profit cannot be negative
+
+	for (const auto& x : con) {
+		// Let's update price_min to a lower value. The profit only increases because x - new_price_min > x - old_price_min
+		// Keeping old prices (higher) does not make sense - they cannot lead to higher profits than the current minimum
+		if (x < min_price) min_price = x;
+
+		if (x - min_price > result) result = x - min_price;
+	}
+
+	return result;
+
+}
 
 #endif 
